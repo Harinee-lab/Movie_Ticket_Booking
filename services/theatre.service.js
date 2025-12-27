@@ -46,6 +46,25 @@ const deleteTheatre = async (id) => {
     throw error;
   }
 };
+const getAllTheatres = async (data) => {
+  try {
+    let query = {};
+    if (data && data.city) {
+      query.city = data.city;
+    }
+    if (data && data.pincode) {
+      query.pincode = data.pincode;
+    }
+    if (data && data.name) {
+      query.name = data.name;
+    }
+    const response = await Theatre.find(query);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 const updateMoviesInTheatres = async (theatreId, movieIds, insert) => {
   const theatre = await Theatre.findById(theatreId);
   if (!theatre) {
@@ -71,6 +90,7 @@ const updateMoviesInTheatres = async (theatreId, movieIds, insert) => {
 module.exports = {
   createTheatre,
   getTheatre,
+  getAllTheatres,
   deleteTheatre,
   updateMoviesInTheatres,
 };

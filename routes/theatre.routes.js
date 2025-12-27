@@ -7,6 +7,7 @@ const routes = (app) => {
     theatreController.createTheatre
   );
   app.get("/mba/api/v1/theatres/:id", theatreController.getTheatre);
+  app.get("/mba/api/v1/theatres", theatreController.getTheatres);
   app.delete("/mba/api/v1/theatres/:id", theatreController.deleteTheatre);
   app.patch(
     "/mba/api/v1/theatres/:id/movies",
