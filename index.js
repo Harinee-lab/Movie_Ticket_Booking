@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const Movie = require("./models/movie.model");
 const MovieRoutes = require("./routes/movie.routes");
 const theatreRoutes = require("./routes/theatre.routes");
+const authRoutes = require("./routes/auth.routes");
 env.config();
 
 const app = express();
@@ -12,8 +13,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+mongoose.set("debug", true);
+
 MovieRoutes(app);
 theatreRoutes(app);
+authRoutes(app);
 app.get("/home", (req, res) => {
   console.log("Hitting /home");
   return res.json({
