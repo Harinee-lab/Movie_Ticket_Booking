@@ -1,4 +1,8 @@
 const Theatre = require("../models/theatre.model");
+const {
+  errorResponseBody,
+  successResponseBody,
+} = require("../utils/responsebody");
 
 const createTheatre = async (data) => {
   try {
@@ -87,10 +91,47 @@ const updateMoviesInTheatres = async (theatreId, movieIds, insert) => {
   await theatre.save();
   return theatre.populate("movies");
 };
+const getMoviesInATheatre = async (id) => {
+  try {
+    const theatre = await Theatre.findById(id, {
+      name: 1,
+      movies: 1,
+      address: 1,
+    }).populate("movies");
+    if (!theatre) {
+      return {
+        err: "No theatre with the given id found",
+        code: 404,
+      };
+    }
+    return theatre;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+const getMovies = async (req, res) => {
+  try {
+    const response = await theatreService.getMoviesInATheatre(req.params.id);
+    if (response.err) {
+      errorResponseBody.err = error;
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
+    successResponseBody.message =
+      "Successfully fetched the movies for the theatre";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+    errorResponseBody.err = error;
+    return res.status(500).json(errorResponseBody);
+  }
+};
 module.exports = {
   createTheatre,
   getTheatre,
   getAllTheatres,
   deleteTheatre,
   updateMoviesInTheatres,
+  getMoviesInATheatre,
+  getMovies,
 };
