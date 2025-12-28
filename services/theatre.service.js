@@ -69,6 +69,30 @@ const getAllTheatres = async (data) => {
     throw error;
   }
 };
+const updateThreatre = async (id, data) => {
+  try {
+    const response = await Theatre.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
+    if (!response) {
+      return {
+        err: "No  theatre found foe the given id",
+        code: 404,
+      };
+    }
+    return response;
+  } catch (error) {
+    if (error.name) {
+      let err = {};
+      Object.keys(error.errors).forEach((keys) => {
+        err[key] = error.errors[key].message;
+      });
+      return { err: err, code: 404 };
+    }
+    throw error;
+  }
+};
 const updateMoviesInTheatres = async (theatreId, movieIds, insert) => {
   const theatre = await Theatre.findById(theatreId);
   if (!theatre) {
@@ -126,6 +150,21 @@ const getMovies = async (req, res) => {
     return res.status(500).json(errorResponseBody);
   }
 };
+const checkMovieInATheatre = async (theatreId, movieId) => {
+  try {
+    let response = await Theatre.findById(theatreId);
+    if (!response) {
+      return {
+        err: "No such theatre found",
+        code: 404,
+      };
+    }
+    return response.movies.indexOf(movieId) != -1;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 module.exports = {
   createTheatre,
   getTheatre,
@@ -134,4 +173,6 @@ module.exports = {
   updateMoviesInTheatres,
   getMoviesInATheatre,
   getMovies,
+  updateThreatre,
+  checkMovieInATheatre,
 };

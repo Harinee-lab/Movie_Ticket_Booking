@@ -15,5 +15,9 @@ const routes = (app) => {
     theatreController.updateMoviesInTheatre
   );
   app.get("/mba/api/v1/theatres/:id/movies", theatreController.getMovies);
+  app.get(
+    "/mba/api/v1/theatres/:theatreId/movies/:movieId",
+    theatreController.checkMovie
+  );
 };
 module.exports = routes;
