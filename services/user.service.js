@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-const { USER_ROLE, USER_STATUS } = require("../utils/constants");
+const { USER_ROLE, USER_STATUS, STATUS } = require("../utils/constants");
 const createUser = async (data) => {
   try {
     if (
@@ -12,7 +12,7 @@ const createUser = async (data) => {
       if (data.userStatus && data.userStatus != USER_STATUS.approved) {
         throw {
           err: "we cannot set any other status for customer",
-          code: 400,
+          code: STATUS.BAD_REQUEST,
         };
       }
     }
@@ -28,7 +28,7 @@ const createUser = async (data) => {
       Object.keys(error.errors).forEach((key) => {
         err[key] = error.errors[key].message;
       });
-      throw { err: err, code: 422 };
+      throw { err: err, code: STATUS.BAD_REQUEST };
     }
     throw error;
   }
@@ -39,7 +39,10 @@ const getUserByemail = async (email) => {
       email: email,
     });
     if (!user) {
-      throw { err: "No user found for the given email", code: 404 };
+      throw {
+        err: "No user found for the given email",
+        code: STATUS.NOT_FOUND,
+      };
     }
     return user;
   } catch (error) {
@@ -75,7 +78,7 @@ const updateUserRoleorStatus = async (data, id) => {
     if (!response)
       throw {
         err: "No user found for the given id",
-        code: 404,
+        code: STATUS.NOT_FOUND,
       };
     return response;
   } catch (error) {
@@ -87,7 +90,7 @@ const updateUserRoleorStatus = async (data, id) => {
       });
       throw {
         err: "The properties does validate te constraints, please check ",
-        code: 400,
+        code: STATUS.BAD_REQUEST,
       };
     }
     throw error;
