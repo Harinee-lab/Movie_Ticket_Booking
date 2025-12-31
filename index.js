@@ -6,6 +6,7 @@ const Movie = require("./models/movie.model");
 const MovieRoutes = require("./routes/movie.routes");
 const theatreRoutes = require("./routes/theatre.routes");
 const authRoutes = require("./routes/auth.routes");
+const userRoutes = require("./routes/user.routes");
 env.config();
 
 const app = express();
@@ -19,6 +20,7 @@ mongoose.set("debug", true);
 MovieRoutes(app);
 theatreRoutes(app);
 authRoutes(app);
+userRoutes(app);
 app.get("/home", (req, res) => {
   console.log("Hitting /home");
   return res.json({

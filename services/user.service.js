@@ -60,9 +60,42 @@ const getUserById = async (id) => {
     throw error;
   }
 };
-
+const updateUserRoleorStatus = async (data, id) => {
+  try {
+    let updateQuery = {};
+    if (data.userRole) updateQuery.userRole = data.userRole;
+    if (data.userStatus) updateQuery.userStatus = data.userStatus;
+    let response = await User.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      updateQuery,
+      { new: true, runValidators: true }
+    );
+    if (!response)
+      throw {
+        err: "No user found for the given id",
+        code: 404,
+      };
+    return response;
+  } catch (error) {
+    console.log(error);
+    if (error.name == "ValidationError") {
+      let err = {};
+      Object.keys(error.errors).forEach((key) => {
+        err[key] = error.errors[key].message;
+      });
+      throw {
+        err: "The properties does validate te constraints, please check ",
+        code: 400,
+      };
+    }
+    throw error;
+  }
+};
 module.exports = {
   createUser,
   getUserByemail,
   getUserById,
+  updateUserRoleorStatus,
 };
