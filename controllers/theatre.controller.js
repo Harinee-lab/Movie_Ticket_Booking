@@ -51,6 +51,56 @@ const deleteTheatre = async (req, res) => {
     res.status(500).json(errorResponseBody);
   }
 };
+const getTheatres = async (req, res) => {
+  try {
+    const response = await theatreService.getAllTheatres(req.query);
+    successResponseBody.data = response;
+    successResponseBody.message = "All theatres retrieved successfully";
+    res.status(200).json(successResponseBody);
+  } catch (error) {
+    errorResponseBody.err = error;
+    res.status(500).json(errorResponseBody);
+  }
+};
+const updateTheatre = async (req, res) => {
+  try {
+    const response = await theatreService.updateTheatre(
+      req.params.id,
+      req.body
+    );
+    if (response.err) {
+      errorResponseBody.err = response.error;
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
+    successResponseBody.message = "Successfully updated the theatre";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+    console.log(error);
+    errorResponseBody.err = error;
+    return res.status(500).json(errorResponseBody);
+  }
+};
+const updateMovies = async (req, res) => {
+  try {
+    const response = await theatreService.updateMoviesInTheatres(
+      req.params.id,
+      req.body.movieIds,
+      req.body.insert
+    );
+    if (response.err) {
+      errorResponseBody.err = response.error;
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
+    successResponseBody.message = "Successfully updated movies inn the theatre";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+    console.log(error);
+    errorResponseBody.err = error;
+    return res.status(500).json(errorResponseBody);
+  }
+};
 const updateMoviesInTheatre = async (req, res) => {
   try {
     const response = await theatreService.updateMoviesInTheatres(
@@ -71,9 +121,49 @@ const updateMoviesInTheatre = async (req, res) => {
     res.status(500).json(errorResponseBody);
   }
 };
+const getMovies = async (req, res) => {
+  try {
+    const response = await theatreService.getMoviesInATheatre(req.params.id);
+    if (response.err) {
+      errorResponseBody.err = response.err;
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
+    successResponseBody.message =
+      "Successfully fetched the movies for the theatre";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+    errorResponseBody.err = error;
+    return res.status(500).json(errorResponseBody);
+  }
+};
+const checkMovie = async (req, res) => {
+  try {
+    const response = await theatreService.checkMovieInATheatre(
+      req.params.theatreId,
+      req.params.movieId
+    );
+    if (response.err) {
+      errorResponseBody.err = response.err;
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
+    successResponseBody.message =
+      "Succesfully checked if the movie is present in the theatre";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+    errorResponseBody.err = error;
+    return res.status(500).json(errorResponseBody);
+  }
+};
 module.exports = {
   createTheatre,
   getTheatre,
   deleteTheatre,
+  getTheatres,
   updateMoviesInTheatre,
+  getMovies,
+  updateTheatre,
+  getMovies,
+  checkMovie,
 };
