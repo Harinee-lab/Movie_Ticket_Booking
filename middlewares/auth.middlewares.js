@@ -41,7 +41,7 @@ const isAuthenticated = async (req, res, next) => {
       return res.status(STATUS_CODES.UNAUTHORIZED).json(errorResponseBody);
     }
     const user = await userService.getUserById(response.id);
-    req.user = user.id;
+    req.userId = user.id;
     next();
   } catch (error) {
     if (error && error.name === "JsonWebTokenError") {
