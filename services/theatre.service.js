@@ -96,7 +96,7 @@ const updateTheatre = async (id, data) => {
 const updateMoviesInTheatres = async (theatreId, movieIds, insert) => {
   const theatre = await Theatre.findById(theatreId);
   if (!theatre) {
-    return {
+    throw {
       err: "No such theatre found for the given id",
       code: STATUS_CODES.NOT_FOUND,
     };
@@ -123,7 +123,7 @@ const getMoviesInATheatre = async (id) => {
       address: 1,
     }).populate("movies");
     if (!theatre) {
-      return {
+      throw {
         err: "No theatre with the given id found",
         code: STATUS_CODES.NOT_FOUND,
       };
