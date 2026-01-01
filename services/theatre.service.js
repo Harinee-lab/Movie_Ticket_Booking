@@ -69,26 +69,26 @@ const getAllTheatres = async (data) => {
     throw error;
   }
 };
-const updateThreatre = async (id, data) => {
+const updateTheatre = async (id, data) => {
   try {
     const response = await Theatre.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     });
     if (!response) {
-      return {
+      throw {
         err: "No theatre found for the given id",
-        code: STATUS_CODES.NOT_FOUND,
+        code: STATUS_CODES.UNPROCESSABLE_ENTITY,
       };
     }
     return response;
   } catch (error) {
-    if (error.name) {
+    if (error.name === "ValidationError") {
       let err = {};
-      Object.keys(error.errors).forEach((keys) => {
+      Object.keys(error.errors).forEach((key) => {
         err[key] = error.errors[key].message;
       });
-      return { err: err, code: STATUS_CODES.NOT_FOUND };
+      throw { err: err, code: STATUS_CODES.UNPROCESSABLE_ENTITY };
     }
     throw error;
   }
@@ -175,6 +175,6 @@ module.exports = {
   updateMoviesInTheatres,
   getMoviesInATheatre,
   getMovies,
-  updateThreatre,
+  updateTheatre,
   checkMovieInATheatre,
 };

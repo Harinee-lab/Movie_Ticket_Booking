@@ -66,15 +66,14 @@ const updateTheatre = async (req, res) => {
       req.params.id,
       req.body
     );
-    if (response.err) {
-      errorResponseBody.err = response.error;
-      return res.status(response.code).json(errorResponseBody);
-    }
     successResponseBody.data = response;
     successResponseBody.message = "Successfully updated the theatre";
     return res.status(STATUS_CODES.OK).json(successResponseBody);
   } catch (error) {
-    console.log(error);
+    if (error.err) {
+      errorResponseBody.err = error.err;
+      return res.status(error.code).json(errorResponseBody);
+    }
     errorResponseBody.err = error;
     return res
       .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
