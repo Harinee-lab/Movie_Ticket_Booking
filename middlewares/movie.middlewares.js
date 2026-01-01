@@ -1,3 +1,4 @@
+const { STATUS_CODES } = require("../utils/constants");
 const badRequestResponse = {
   success: false,
   err: "The name of the movie is not present in the request sent",
@@ -8,12 +9,12 @@ const validateMovieCreationRequest = async (req, res, next) => {
   if (!req.body.name) {
     badRequestResponse.err =
       "The name of the movie is not present in the request sent";
-    return res.status(400).json(badRequestResponse);
+    return res.status(STATUS_CODES.BAD_REQUEST).json(badRequestResponse);
   }
   if (!req.body.description) {
     badRequestResponse.err =
       "The description of the movie is not present in the request sent";
-    return res.status(400).json(badRequestResponse);
+    return res.status(STATUS_CODES.BAD_REQUEST).json(badRequestResponse);
   }
   if (
     !req.body.casts ||
@@ -22,22 +23,22 @@ const validateMovieCreationRequest = async (req, res, next) => {
   ) {
     badRequestResponse.err =
       "The casts of the movie is not present in the request sent";
-    return res.status(400).json(badRequestResponse);
+    return res.status(STATUS_CODES.BAD_REQUEST).json(badRequestResponse);
   }
   if (!req.body.trailerUrl) {
     badRequestResponse.err =
       "The trailer URL of the movie is not present in the request sent";
-    return res.status(400).json(badRequestResponse);
+    return res.status(STATUS_CODES.BAD_REQUEST).json(badRequestResponse);
   }
   if (!req.body.releaseDate) {
     badRequestResponse.err =
       "The release date of the movie is not present in the request sent";
-    return res.status(400).json(badRequestResponse);
+    return res.status(STATUS_CODES.BAD_REQUEST).json(badRequestResponse);
   }
   if (!req.body.director) {
     badRequestResponse.err =
       " The director of the movie is not present in the request sent";
-    return res.status(400).json(badRequestResponse);
+    return res.status(STATUS_CODES.BAD_REQUEST).json(badRequestResponse);
   }
   next();
 };

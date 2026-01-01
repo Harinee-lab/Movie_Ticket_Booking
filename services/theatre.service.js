@@ -3,7 +3,7 @@ const {
   errorResponseBody,
   successResponseBody,
 } = require("../utils/responsebody");
-
+const { STATUS_CODES } = require("../utils/constants");
 const createTheatre = async (data) => {
   try {
     const response = await Theatre.create(data);
@@ -14,7 +14,7 @@ const createTheatre = async (data) => {
       Object.keys(error.errors).forEach((key) => {
         err[key] = error.errors[key].message;
       });
-      return { err: err, code: 422 };
+      throw { err: err, code: STATUS_CODES.UNPROCESSABLE_ENTITY };
     }
     console.log(error);
     throw error;
@@ -26,7 +26,7 @@ const getTheatre = async (id) => {
     if (!response) {
       return {
         err: "No theatre found for the given id",
-        code: 404,
+        code: STATUS_CODES.NOT_FOUND,
       };
     }
     return response;
@@ -41,7 +41,7 @@ const deleteTheatre = async (id) => {
     if (!response) {
       return {
         err: "No theatre found for the given id",
-        code: 404,
+        code: STATUS_CODES.NOT_FOUND,
       };
     }
     return response;
@@ -77,8 +77,8 @@ const updateThreatre = async (id, data) => {
     });
     if (!response) {
       return {
-        err: "No  theatre found foe the given id",
-        code: 404,
+        err: "No theatre found for the given id",
+        code: STATUS_CODES.NOT_FOUND,
       };
     }
     return response;
@@ -88,7 +88,7 @@ const updateThreatre = async (id, data) => {
       Object.keys(error.errors).forEach((keys) => {
         err[key] = error.errors[key].message;
       });
-      return { err: err, code: 404 };
+      return { err: err, code: STATUS_CODES.NOT_FOUND };
     }
     throw error;
   }
@@ -98,7 +98,7 @@ const updateMoviesInTheatres = async (theatreId, movieIds, insert) => {
   if (!theatre) {
     return {
       err: "No such theatre found for the given id",
-      code: 404,
+      code: STATUS_CODES.NOT_FOUND,
     };
   }
   if (insert) {
@@ -125,7 +125,7 @@ const getMoviesInATheatre = async (id) => {
     if (!theatre) {
       return {
         err: "No theatre with the given id found",
-        code: 404,
+        code: STATUS_CODES.NOT_FOUND,
       };
     }
     return theatre;
@@ -144,10 +144,12 @@ const getMovies = async (req, res) => {
     successResponseBody.data = response;
     successResponseBody.message =
       "Successfully fetched the movies for the theatre";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS_CODES.OK).json(successResponseBody);
   } catch (error) {
     errorResponseBody.err = error;
-    return res.status(500).json(errorResponseBody);
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(errorResponseBody);
   }
 };
 const checkMovieInATheatre = async (theatreId, movieId) => {
@@ -156,7 +158,7 @@ const checkMovieInATheatre = async (theatreId, movieId) => {
     if (!response) {
       return {
         err: "No such theatre found",
-        code: 404,
+        code: STATUS_CODES.NOT_FOUND,
       };
     }
     return response.movies.indexOf(movieId) != -1;

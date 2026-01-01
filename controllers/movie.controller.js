@@ -4,7 +4,7 @@ const {
   successResponseBody,
   errorResponseBody,
 } = require("../utils/responsebody");
-
+const { STATUS_CODES } = require("../utils/constants");
 const createMovie = async (req, res) => {
   try {
     const response = await movieService.createMovie(req.body);
@@ -16,10 +16,12 @@ const createMovie = async (req, res) => {
     }
     successResponseBody.data = response;
     successResponseBody.message = "Movie created successfully";
-    return res.status(201).json(successResponseBody);
+    return res.status(STATUS_CODES.CREATED).json(successResponseBody);
   } catch (err) {
     console.log(err);
-    return res.status(500).json(errorResponseBody);
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(errorResponseBody);
   }
 };
 const deleteMovie = async (req, res) => {
@@ -31,10 +33,12 @@ const deleteMovie = async (req, res) => {
     }
     successResponseBody.data = response;
     successResponseBody.message = "Movie deleted successfully";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS_CODES.OK).json(successResponseBody);
   } catch (err) {
     console.log(err.name, err.errors.description);
-    return res.status(500).json(errorResponseBody);
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(errorResponseBody);
   }
 };
 const getMovie = async (req, res) => {
@@ -45,10 +49,12 @@ const getMovie = async (req, res) => {
       return res.status(response.code).json(errorResponseBody);
     }
     successResponseBody.data = response;
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS_CODES.OK).json(successResponseBody);
   } catch (err) {
     console.log(err);
-    return res.status(500).json(errorResponseBody);
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(errorResponseBody);
   }
 };
 const updateMovie = async (req, res) => {
@@ -62,11 +68,13 @@ const updateMovie = async (req, res) => {
       return res.status(response.code).json(errorResponseBody);
     }
     successResponseBody.data = response;
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS_CODES.OK).json(successResponseBody);
   } catch (err) {
     console.log(err);
     errorResponseBody.err = err;
-    return res.status(500).json(errorResponseBody);
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(errorResponseBody);
   }
 };
 const getMovies = async (req, res) => {
@@ -77,11 +85,13 @@ const getMovies = async (req, res) => {
       return res.status(response.code).json(errorResponseBody);
     }
     successResponseBody.data = response;
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS_CODES.OK).json(successResponseBody);
   } catch (error) {
     console.log(error);
     errorResponseBody.err = error;
-    return res.status(500).json(errorResponseBody);
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(errorResponseBody);
   }
 };
 module.exports = {
