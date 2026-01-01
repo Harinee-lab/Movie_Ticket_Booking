@@ -22,15 +22,14 @@ const createTheatre = async (req, res) => {
 const getTheatre = async (req, res) => {
   try {
     const response = await theatreService.getTheatre(req.params.id);
-    if (response.err) {
-      errorResponseBody.err = response.err;
-      errorResponseBody.message = "No theatre found for the given id";
-      return res.status(response.code).json(errorResponseBody);
-    }
     successResponseBody.data = response;
     successResponseBody.message = "Theatre retrieved successfully";
     res.status(STATUS_CODES.OK).json(successResponseBody);
   } catch (error) {
+    if (error.err) {
+      errorResponseBody.err = error.err;
+      return res.status(error.code).json(errorResponseBody);
+    }
     errorResponseBody.err = error;
     res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }

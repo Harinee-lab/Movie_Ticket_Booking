@@ -24,7 +24,7 @@ const getTheatre = async (id) => {
   const response = await Theatre.findById(id);
   try {
     if (!response) {
-      return {
+      throw {
         err: "No theatre found for the given id",
         code: STATUS_CODES.NOT_FOUND,
       };
