@@ -16,8 +16,18 @@ const routes = (app) => {
     movieController.deleteMovie
   );
   app.get("/mba/api/v1/movies/:movieId", movieController.getMovie);
-  app.put("/mba/api/v1/movies/:id", movieController.updateMovie);
-  app.patch("/mba/api/v1/movies/:id", movieController.updateMovie);
+  app.put(
+    "/mba/api/v1/movies/:id",
+    authMiddleware.isAuthenticated,
+    authMiddleware.isAdminOrClient,
+    movieController.updateMovie
+  );
+  app.patch(
+    "/mba/api/v1/movies/:id",
+    authMiddleware.isAuthenticated,
+    authMiddleware.isAdminOrClient,
+    movieController.updateMovie
+  );
   app.get("/mba/api/v1/movies", movieController.getMovies);
 };
 module.exports = routes;
