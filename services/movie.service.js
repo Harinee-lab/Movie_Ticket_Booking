@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Movie = require("../models/movie.model");
+const { STATUS_CODES } = require("../utils/constants");
 const createMovie = async (data) => {
   try {
     const movie = await Movie.create(data);
@@ -11,7 +12,7 @@ const createMovie = async (data) => {
         err[key] = error.errors[key].message;
       });
       console.log(err);
-      return { err, code: 422 };
+      throw { err, code: STATUS.UNPROCESSABLE_ENTITY };
     } else {
       throw error;
     }
@@ -19,26 +20,27 @@ const createMovie = async (data) => {
 };
 const deleteMovie = async (id) => {
   try {
+    const response = await Movie.findById(id);
     if (!response) {
-      return {
+      throw {
         err: "No movie found for the given id ",
-        code: 404,
+        code: STATUS_CODES.UNPROCESSABLE_ENTITY,
       };
     }
+    await Movie.findByIdAndDelete(id);
+    return response;
   } catch (error) {
     console.log(error);
     throw error;
   }
-  const response = await Movie.findByIdAndDelete(id);
-  return response;
 };
 const getMovieById = async (id) => {
   const movie = await Movie.findById(id);
   console.log("Movie found:", movie);
   if (!movie) {
-    return {
+    throw {
       err: "No movie found for the corresponding id provided",
-      code: 404,
+      code: STATUS_CODES.NOT_FOUND,
     };
   }
   return movie;
@@ -57,7 +59,7 @@ const updateMovie = async (id, data) => {
         err[key] = error.errors[key].message;
       });
       console.log(err);
-      return { err, code: 422 };
+      throw { err, code: STATUS_CODES.UNPROCESSABLE_ENTITY };
     } else {
       throw error;
     }
@@ -70,9 +72,9 @@ const fetchMovies = async (filter) => {
   }
   let movies = await Movie.find(query);
   if (!movies) {
-    return {
+    throw {
       err: "Not able to find the queries movies",
-      code: 404,
+      code: STATUS.NOT_FOUND,
     };
   }
   return movies;
