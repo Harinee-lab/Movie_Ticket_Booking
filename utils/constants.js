@@ -22,9 +22,15 @@ const BOOKING_STATUS = {
   cancelled: "CANCELLED",
   successful: "SUCCESSFUL",
 };
+const PAYMENT_STATUS = {
+  success: "SUCCESS",
+  failed: "FAILED",
+  pending: "PENDING",
+};
 module.exports = {
   USER_ROLE,
   USER_STATUS,
   STATUS_CODES,
+  PAYMENT_STATUS,
   BOOKING_STATUS,
 };
